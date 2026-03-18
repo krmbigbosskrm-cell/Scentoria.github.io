@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Бақыт Дөңгелегі | Fortune Wheel</title>
+  <meta name="description" content="Заманауи бақыт дөңгелегі — 25 секторлы жұлын ойны" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ===== Welcome Intro Screen ===== -->
+  <div class="intro-screen" id="introScreen">
+    <div class="intro-box">
+      <h2>Қош келдіңіз!</h2>
+      <p>Жалғастыру үшін аты-жөніңізді енгізіңіз:</p>
+      <input type="text" id="firstNameInput" placeholder="Атыңыз (Имя)" required />
+      <input type="text" id="lastNameInput" placeholder="Тегіңіз (Фамилия)" required />
+      <button class="intro-btn" id="startBtn">Бастау</button>
+    </div>
+  </div>
+
+  <!-- ===== Background Slideshow ===== -->
+  <div class="bg-slideshow" id="bgSlideshow">
+    <div class="bg-slide active"></div>
+    <div class="bg-slide"></div>
+    <div class="bg-slide"></div>
+    <div class="bg-slide"></div>
+    <div class="bg-slide"></div>
+  </div>
+  <!-- Dark overlay over slideshow -->
+  <div class="bg-overlay"></div>
+
+  <!-- Animated BG particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="page-wrapper">
+
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
+      <span class="icon-sun">☀️</span>
+      <span class="icon-moon" style="display:none;">🌙</span>
+    </button>
+
+    <header class="hero-header">
+      <div class="logo-wrapper">
+        <div class="logo-glow-ring"></div>
+        <div class="logo-frame">
+          <img src="лого.jpeg" alt="Scentoria Logo" class="logo-img" id="logoImg" />
+        </div>
+        <div class="logo-sparkle logo-sparkle-1">✦</div>
+        <div class="logo-sparkle logo-sparkle-2">✦</div>
+        <div class="logo-sparkle logo-sparkle-3">✦</div>
+      </div>
+      <h1 class="title">Scentoria</h1>
+      <p class="subtitle">Try your luck!</p>
+    </header>
+
+    <main class="main-content">
+
+      <!-- Wheel container -->
+      <div class="wheel-scene">
+
+        <!-- Glow ring -->
+        <div class="glow-ring"></div>
+
+        <!-- Pointer -->
+        <div class="pointer" id="pointer">
+          <div class="pointer-inner"></div>
+        </div>
+
+        <!-- Canvas for the wheel -->
+        <canvas id="wheelCanvas" width="560" height="560"></canvas>
+
+        <!-- Center cap -->
+        <div class="center-cap" id="spinBtn">
+          <span class="center-icon">🎯</span>
+          <span class="center-text">АЙНАЛДЫР</span>
+        </div>
+
+      </div>
+
+      <!-- Result card -->
+      <div class="result-card" id="resultCard">
+        <div class="result-icon" id="resultIcon">🎉</div>
+        <div class="result-user-name" id="resultUserName"></div>
+        <div class="result-label">Нәтиже</div>
+        <div class="result-value" id="resultValue">—</div>
+        <button class="again-btn" id="againBtn">Қайта айналдыр</button>
+      </div>
+
+    </main>
+
+    <footer class="page-footer">
+      <span>Бақыт дөңгелегі &copy; 2025</span>
+    </footer>
+
+  </div>
+
+  <script src="wheel.js"></script>
+
+  <!-- Slideshow controller -->
+  <script>
+    (function () {
+      const slides = document.querySelectorAll('.bg-slide');
+      const INTERVAL = 3000;   // ms between slides
+      let current = 0;
+
+      function nextSlide() {
+        const prev = current;
+        current = (current + 1) % slides.length;
+
+        // The outgoing slide becomes 'prev' to stay in background
+        slides[prev].classList.remove('active');
+        slides[prev].classList.add('prev');
+
+        // The incoming slide becomes 'active' to fade in over it
+        slides[current].classList.add('active');
+
+        // After Fade completes, strip 'prev' from the old slide
+        setTimeout(() => {
+          slides[prev].classList.remove('prev');
+        }, 1200); // 1.2s matches CSS opacity/filter transition
+      }
+
+      // Start cycling
+      setInterval(nextSlide, INTERVAL);
+
+      // Theme toggle logic
+      const themeToggle = document.getElementById('themeToggle');
+      const iconSun = themeToggle.querySelector('.icon-sun');
+      const iconMoon = themeToggle.querySelector('.icon-moon');
+
+      themeToggle.addEventListener('click', () => {
+        const htmlElement = document.documentElement;
+        if (htmlElement.getAttribute('data-theme') !== 'light') {
+          htmlElement.setAttribute('data-theme', 'light');
+          iconSun.style.display = 'none';
+          iconMoon.style.display = 'inline';
+        } else {
+          htmlElement.removeAttribute('data-theme');
+          iconSun.style.display = 'inline';
+          iconMoon.style.display = 'none';
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
