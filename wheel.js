@@ -186,26 +186,33 @@
     spinBtn.classList.add("disabled");
 
     // Always force landing on "Бас кандидат" (index 24)
-    const extraSpins = (8 + Math.floor(Math.random() * 8)) * 2 * Math.PI;
+    // Massive initial speed so the 15+ seconds spin doesn't look dead early
+    const extraSpins = (25 + Math.floor(Math.random() * 10)) * 2 * Math.PI;
     const targetIndex = 24; 
-    const requiredRotation = (3 * Math.PI / 2) - (targetIndex * SLICE + SLICE / 2);
+    
+    // "Еле-еле" (barely) logic:
+    // The pointer enters segment 24 at angle (targetIndex + 1) * SLICE traversing counter-clockwise.
+    // We calculate the rotation so the pointer lands exactly at the entrance boundary.
+    const entranceRotation = (3 * Math.PI / 2) - ((targetIndex + 1) * SLICE);
+    // Add a tiny offset (3% to 8% of a slice) so it ticks just over the line and stops immediately
+    const barelyOffset = SLICE * (0.03 + Math.random() * 0.05);
+    const requiredRotation = entranceRotation + barelyOffset;
     
     let angleToTarget = (requiredRotation - rotation) % (2 * Math.PI);
     if (angleToTarget < 0) {
       angleToTarget += 2 * Math.PI;
     }
     
-    // Add a slight variance so it feels natural but definitely hits the segment
-    const randomOffset = (Math.random() - 0.5) * (SLICE * 0.6);
-    const totalDelta = extraSpins + angleToTarget + randomOffset;
+    const totalDelta = extraSpins + angleToTarget;
 
-    const duration = 5000 + Math.random() * 2000; // 5–7 s
+    // Hyper prolonged duration (15–18 seconds) for ultimate suspense
+    const duration = 15000 + Math.random() * 3000;
     const startTime = performance.now();
     const startRot  = rotation;
 
     function easeOut(t) {
-      // Cubic ease-out
-      return 1 - Math.pow(1 - t, 3);
+      // Octic ease-out (power 8) ensures it's painfully slow for the last several seconds
+      return 1 - Math.pow(1 - t, 8);
     }
 
     function frame(now) {
